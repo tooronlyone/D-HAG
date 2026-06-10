@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>D-HAG — Digital Human Harmony AI Grid</title>
+<meta name="description" content="D-HAG - Digital Human Harmony AI Grid. Pakistani AI and infrastructure innovation company building AI-first systems for transport and beyond.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<meta property="og:type" content="website">
+<meta property="og:title" content="D-HAG - Digital Human Harmony AI Grid">
+<meta property="og:description" content="Pakistani AI and infrastructure innovation company building AI-first systems for transport and beyond.">
+<meta property="og:image" content="logo.png">
+<meta property="og:image:alt" content="D-HAG logo">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="D-HAG - Digital Human Harmony AI Grid">
+<meta name="twitter:description" content="Pakistani AI and infrastructure innovation company building AI-first systems for transport and beyond.">
+<meta name="twitter:image" content="logo.png">
+<link rel="icon" href="logo.png" type="image/png">
+<link rel="apple-touch-icon" href="logo.png">
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Barlow:wght@300;400;600;700;900&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #ffffff;
+    --white: #000000;
+    --gray-200: #3a3a3a;
+    --gray-400: #555555;
+    --gray-600: #777777;
+    --gray-800: #e8e8e8;
+    --gray-900: #f5f5f5;
+    --border-subtle: #d9d9d9;
+    --text-muted: #222222;
+    --text-dim: #444444;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 88px;  /* prevents fixed nav from hiding anchor targets */
+  }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+    cursor: default;
+    line-height: 1.5;
+  }
+
+  /* refined scrollbar */
+  ::-webkit-scrollbar { width: 2px; }
+  ::-webkit-scrollbar-track { background: #fff; }
+  ::-webkit-scrollbar-thumb { background: #000; }
+
+  /* ========= LOADER ========= */
+  #loader {
+    position: fixed; inset: 0; background: #fff; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 24px;
+    transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  
+  #loader-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 6px; color: #000;
+    text-transform: uppercase;
+  }
+  #loader-bar-wrap {
+    width: 200px; height: 1px; background: #e0e0e0;
+  }
+  #loader-bar {
+    height: 1px; width: 0; background: #000;
+    transition: width 1.8s cubic-bezier(0.77, 0, 0.18, 1);
+  }
+  #loader-logo {
+    width: 175px;
+    height: 175px;
+    display: block;
+    background-color: #000;
+    -webkit-mask-image: url('logo.png');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: url('logo.png');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.2s;
+  }
+  @media (prefers-color-scheme: dark) {
+    #loader-logo { background-color: #fff; }
+  }
+
+  /* ========= NAVIGATION (fixed, non-overlapping content via padding) ========= */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 60px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: blur(12px);
+    opacity: 0;
+    transform: translateY(-16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  nav.visible { opacity: 1; transform: translateY(0); }
+
+  .nav-logo {
+    display: inline-flex;
+    align-items: center;
+    gap: 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 8px; color: #000;
+    text-decoration: none;
+  }
+  .nav-logo img {
+    width: 58px;
+    height: 58px;
+    display: block;
+    background-color: #000;
+    -webkit-mask-image: url('logo.png');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: url('logo.png');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+  }
+  .nav-logo span {
+    white-space: nowrap;
+  }
+  @media (prefers-color-scheme: dark) {
+    .nav-logo img { background-color: #fff; }
+  }
+  .nav-links {
+    display: flex; gap: 44px; list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: #000;
+    text-decoration: none; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: #000; }
+
+  .nav-cta {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px;
+    color: #000; background: #fff;
+    padding: 10px 24px;
+    text-decoration: none; text-transform: uppercase;
+    border: 1px solid #000;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover { background: #f5f5f5; color: #000; }
+
+  /* ========= HERO with proper top padding to clear fixed nav ========= */
+  #hero {
+    min-height: 100vh;
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 56px;
+    position: relative;
+    background: var(--black);
+  }
+
+  .hero-copy {
+    max-width: 760px;
+  }
+
+  .hero-visual {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    min-height: 0;
+    padding-left: 24px;
+    padding-top: 36px;
+  }
+  .hero-visual img {
+    width: min(100%, 1760px);
+    height: auto;
+    display: block;
+    object-fit: contain;
+    transform: translate(-12px, -72px) scale(1.49);
+  }
+
+  .hero-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 5px; color: #000;
+    text-transform: uppercase; margin-bottom: 32px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+  }
+  .hero-label.visible { opacity: 1; transform: translateY(0); }
+
+  .hero-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(72px, 12vw, 160px);
+    line-height: 0.9; letter-spacing: 4px;
+    color: #000;
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
+  }
+  .hero-title.visible { opacity: 1; transform: translateY(0); }
+  /* increased contrast for span — now clearly readable light gray */
+  .hero-title span { color: #000; letter-spacing: 2px; }
+
+  .hero-sub {
+    margin-top: 32px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px; font-weight: 300; letter-spacing: 2px;
+    color: #000;  /* improved readability */
+    text-transform: uppercase;
+    max-width: 540px; line-height: 1.8;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.8s ease 0.7s, transform 0.8s ease 0.7s;
+  }
+  .hero-sub.visible { opacity: 1; transform: translateY(0); }
+
+  .hero-btns {
+    margin-top: 56px;
+    display: flex; gap: 20px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.8s ease 0.9s, transform 0.8s ease 0.9s;
+  }
+  .hero-btns.visible { opacity: 1; transform: translateY(0); }
+
+  .hero-scroll {
+    position: absolute;
+    left: 60px;
+    bottom: 48px;
+  }
+
+  .hero-year {
+    position: absolute;
+    right: 60px;
+    bottom: 48px;
+  }
+
+  .btn-primary {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px;
+    color: #000; background: #fff;
+    padding: 16px 36px; text-decoration: none;
+    text-transform: uppercase; border: 1px solid #000;
+    transition: background 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-primary:hover { background: #f5f5f5; color: #000; }
+
+  .btn-secondary {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px;
+    color: #000; background: transparent;
+    padding: 16px 36px; text-decoration: none;
+    text-transform: uppercase; border: 1px solid #000;
+    transition: border-color 0.2s, color 0.2s;
+    display: inline-block;
+  }
+  .btn-secondary:hover { border-color: #000; color: #000; }
+
+  .hero-year {
+    position: absolute; right: 60px; bottom: 60px;
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; color: #000;
+    text-transform: uppercase;
+  }
+
+  .hero-scroll {
+    position: absolute; left: 60px; bottom: 60px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 4px; color: #000;
+    text-transform: uppercase; display: flex; align-items: center; gap: 12px;
+    opacity: 0;
+    transition: opacity 0.8s ease 1.2s;
+  }
+  .hero-scroll.visible { opacity: 1; }
+  .hero-scroll::after {
+    content: ''; width: 40px; height: 1px; background: #000;
+    display: inline-block;
+    animation: scrollline 1.5s ease-in-out infinite alternate;
+  }
+  @keyframes scrollline { from { width: 20px; } to { width: 50px; } }
+
+  /* ========= GLOBAL SECTION STYLES ========= */
+  section {
+    padding: 120px 60px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  /* scroll-margin-top is handled by html scroll-padding, ensures sections not hidden under nav */
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 5px; color: #000;
+    text-transform: uppercase; margin-bottom: 60px;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .section-label::before {
+    content: ''; display: block;
+    width: 30px; height: 1px; background: #000;
+  }
+
+  /* ========= ABOUT ========= */
+  #about .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px;
+    align-items: start;
+  }
+  #about h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    line-height: 0.95; color: #000; letter-spacing: 2px;
+  }
+  #about p {
+    font-size: 15px; font-weight: 300; line-height: 1.9;
+    color: #000;
+    max-width: 480px;
+    margin-bottom: 24px;
+  }
+  .stat-row {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border-subtle);
+    margin-top: 80px; border: 1px solid var(--border-subtle);
+  }
+  .stat-item {
+    padding: 44px 32px; background: #fff;
+  }
+  .stat-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px; color: #000; letter-spacing: 2px;
+    line-height: 1;
+  }
+  .stat-desc {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; color: #000; letter-spacing: 3px;
+    text-transform: uppercase; margin-top: 8px;
+  }
+
+  /* ========= MISSION (white background, dark text = high contrast) ========= */
+  #mission {
+    background: #fff; color: #000;
+  }
+  #mission .section-label { color: #888; }
+  #mission .section-label::before { background: #aaa; }
+  #mission h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 7vw, 96px);
+    line-height: 0.95; color: #000; letter-spacing: 2px;
+    max-width: 1000px;
+  }
+  #mission .mission-sub {
+    font-size: 14px; font-weight: 300;
+    color: #2b2b2b; letter-spacing: 2px;
+    margin-top: 40px; max-width: 620px; line-height: 1.9;
+    text-transform: uppercase;
+  }
+
+  /* ========= PROJECT ========= */
+  #project .project-header {
+    display: flex; justify-content: space-between;
+    align-items: flex-start; margin-bottom: 60px;
+  }
+  #project h2 {
+    font-family: 'Barlow', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    font-weight: 900;
+    line-height: 0.95; color: #000; letter-spacing: 1px;
+    text-transform: none;
+  }
+  .project-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 3px; color: #000;
+    text-transform: uppercase; border: 1px solid var(--border-subtle);
+    padding: 8px 16px; margin-top: 8px; display: inline-block;
+  }
+  .project-card {
+    border: 1px solid var(--border-subtle); padding: 60px;
+    position: relative; overflow: hidden;
+    background: #fff;
+  }
+  .project-card::before {
+    content: ''; position: absolute;
+    top: 0; left: 0; width: 3px; height: 100%;
+    background: #000;
+  }
+  .project-name {
+    font-family: 'Barlow', sans-serif;
+    font-size: 56px; font-weight: 900; letter-spacing: 1px; color: #000;
+    margin-bottom: 8px;
+    text-transform: none;
+  }
+  .project-tagline {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; color: #000;
+    text-transform: uppercase; margin-bottom: 40px;
+  }
+  .feature-list {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; background: var(--border-subtle); margin-top: 44px;
+  }
+  .feature-item {
+    background: #fff; padding: 34px;
+  }
+  .feature-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; color: #000; letter-spacing: 2px; margin-bottom: 12px;
+  }
+  .feature-title {
+    font-size: 14px; font-weight: 600; color: #000;
+    letter-spacing: 1px; margin-bottom: 8px;
+    text-transform: uppercase;
+  }
+  .feature-desc {
+    font-size: 13px; font-weight: 300; color: #000; line-height: 1.7;
+  }
+
+  /* ========= VISION TIMELINE (high-contrast fixes for future items) ========= */
+  #vision {
+    background: #fff;
+  }
+  #vision h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(40px, 6vw, 80px);
+    letter-spacing: 2px; color: #000; margin-bottom: 80px;
+  }
+  .timeline {
+    display: flex; flex-direction: column; gap: 0;
+    border-left: 1px solid var(--border-subtle); margin-left: 20px;
+  }
+  .timeline-item {
+    display: flex; align-items: flex-start; gap: 40px;
+    padding: 40px 0 40px 60px; position: relative;
+    border-bottom: 1px solid #e5e5e5;
+  }
+  .timeline-item::before {
+    content: ''; position: absolute; left: -5px; top: 48px;
+    width: 9px; height: 9px; background: #000;
+    border-radius: 0px;
+  }
+  .timeline-item.future::before { background: #777; border: 1px solid #aaa; }
+  .timeline-year {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 38px; color: #000; letter-spacing: 2px;
+    min-width: 110px;
+  }
+  .timeline-item.future .timeline-year { color: #000; }  /* clearly visible light gray */
+  .timeline-content h3 {
+    font-size: 15px; font-weight: 600; letter-spacing: 2px;
+    color: #000; text-transform: none; margin-bottom: 10px;
+  }
+  .timeline-item.future .timeline-content h3 { color: #000; } /* better contrast */
+  .timeline-content p {
+    font-size: 13px; font-weight: 300; color: #000; line-height: 1.8;
+    max-width: 500px;
+  }
+
+  /* ========= FOUNDER ========= */
+  #founder {
+    background: var(--gray-900);
+  }
+  #founder .founder-grid {
+    display: grid; grid-template-columns: 1fr 2fr;
+    gap: 80px; align-items: center;
+  }
+  .founder-badge {
+    border: 1px solid var(--border-subtle);
+    background: #fff;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 480px;
+  }
+  .founder-photo {
+    width: 100%;
+    aspect-ratio: 4 / 5;
+    object-fit: cover;
+    object-position: center top;
+    display: block;
+    background: #f0f0f0;
+  }
+  .founder-role {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 4px; color: #000;
+    text-transform: uppercase; margin-top: 18px;
+  }
+  #founder h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 64px);
+    letter-spacing: 2px; color: #000; margin-bottom: 24px;
+    line-height: 1;
+  }
+  #founder p {
+    font-size: 15px; font-weight: 300; line-height: 1.9; color: #000;
+    margin-bottom: 20px;
+  }
+
+  /* ========= CTA ========= */
+  #cta {
+    text-align: center; padding: 160px 60px;
+  }
+  #cta h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(56px, 10vw, 130px);
+    letter-spacing: 4px; color: #000; line-height: 0.9;
+    margin-bottom: 48px;
+  }
+  #cta h2 span { color: #000; }
+  #cta p {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; color: #000;
+    text-transform: uppercase; margin-bottom: 56px;
+  }
+
+  /* ========= FOOTER ========= */
+  footer {
+    border-top: 1px solid var(--border-subtle);
+    padding: 40px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: 6px; color: #000;
+  }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 3px; color: #000;
+    text-transform: uppercase;
+  }
+  .footer-links {
+    display: flex; gap: 32px;
+  }
+  .footer-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 3px; color: #000;
+    text-decoration: none; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: #000; }
+
+  /* ========= REVEAL ANIMATION ========= */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ========= RESPONSIVE TWEAKS ========= */
+  @media (max-width: 768px) {
+    nav { padding: 18px 24px; }
+    .nav-links, .nav-cta { display: none; }
+    #hero {
+      grid-template-columns: 1fr;
+      padding: 110px 24px 60px 24px;
+    }
+    section, footer { padding-left: 24px; padding-right: 24px; }
+    #about .about-grid { grid-template-columns: 1fr; gap: 40px; }
+    .stat-row { grid-template-columns: 1fr; }
+    #project .project-header { flex-direction: column; gap: 20px; }
+    .project-card { padding: 32px; }
+    .feature-list { grid-template-columns: 1fr; }
+    #founder .founder-grid { grid-template-columns: 1fr; gap: 40px; }
+    .hero-year { display: none; }
+    .hero-scroll {
+      left: 24px;
+      bottom: 20px;
+    }
+    .hero-visual { order: 2; }
+    .hero-visual { padding-top: 0; }
+    .hero-visual img {
+      width: min(100%, 480px);
+      transform: translateX(0) scale(1);
+    }
+    .timeline-item { flex-direction: column; gap: 12px; padding-left: 24px; }
+    .timeline { margin-left: 8px; }
+    .timeline-item::before { left: -5px; top: 20px; }
+  }
+  @media (max-width: 480px) {
+    .hero-btns { flex-direction: column; width: 100%; }
+    .btn-primary, .btn-secondary { text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <img id="loader-logo" src="logo.png" alt="D-HAG logo">
+  <div id="loader-text">Initializing System</div>
+  <div id="loader-bar-wrap">
+    <div id="loader-bar"></div>
+  </div>
+</div>
+
+<!-- NAVIGATION -->
+<nav id="nav">
+  <a class="nav-logo" href="#" aria-label="D-HAG home">
+    <img src="logo.png" alt="D-HAG logo">
+    <span>D-HAG</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#project">Project</a></li>
+    <li><a href="#vision">Vision</a></li>
+    <li><a href="#founder">Founder</a></li>
+  </ul>
+  <a class="nav-cta" href="#cta">Contact</a>
+</nav>
+
+<!-- HERO SECTION (fixed overlap via padding-top) -->
+<section id="hero">
+  <div class="hero-copy">
+    <div class="hero-label" id="hl">Pakistan - 2026 - AI Infrastructure</div>
+    <h1 class="hero-title" id="ht">
+      BUILDING<br>
+      <span>THE</span><br>
+      FUTURE
+    </h1>
+    <p class="hero-sub" id="hs">
+      Digital Human Harmony AI Grid - converting Pakistan's industries into intelligent, AI-operated systems.
+    </p>
+    <div class="hero-btns" id="hb">
+      <a class="btn-primary" href="#project">See Our Work</a>
+      <a class="btn-secondary" href="#vision">Our Vision</a>
+    </div>
+    <div class="hero-scroll" id="hscroll">Scroll</div>
+    <div class="hero-year">EST. 2026</div>
+  </div>
+  <div class="hero-visual" aria-label="D-HAG visual">
+    <img src="ChatGPT Image Jun 7, 2026, 01_27_31 PM.png" alt="D-HAG visual">
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section id="about">
+  <div class="section-label">01 — About D-HAG</div>
+  <div class="about-grid">
+    <div class="reveal">
+      <h2>AI IS THE<br>NEW<br>INFRASTRUCTURE</h2>
+    </div>
+    <div class="reveal">
+      <p>
+        D-HAG — Digital Human Harmony AI Grid — is a Pakistani innovation and AI company built on a single, unwavering belief: artificial intelligence is not a tool. It is the foundation every modern system must be built upon.
+      </p>
+      <p>
+        We are not here to add AI on top of broken systems. We are here to rebuild those systems from the ground up — intelligent by design, automated by default.
+      </p>
+      <p>
+        Starting with transport. Expanding to education. Reaching every industry that shapes this nation.
+      </p>
+    </div>
+  </div>
+  <div class="stat-row reveal">
+    <div class="stat-item">
+      <div class="stat-num">01</div>
+      <div class="stat-desc">Active Project</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">∞</div>
+      <div class="stat-desc">Industries to Transform</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-num">2026</div>
+      <div class="stat-desc">Year Zero</div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION (white bg, black text, crisp contrast) -->
+<section id="mission">
+  <div class="section-label">02 — Mission</div>
+  <h2 class="reveal">
+    CONVERT PAKISTAN'S INDUSTRIES INTO AI-BASED SYSTEMS.
+  </h2>
+  <p class="mission-sub reveal">
+    National development through technology. Every sector. Every system. Every process —
+    rebuilt for an AI-first future. This is not a product. This is a movement.
+  </p>
+</section>
+
+<!-- PROJECT -->
+<section id="project">
+  <div class="section-label">03 — Current Project</div>
+  <div class="project-header reveal">
+    <h2>Digi_TransX</h2>
+    <span class="project-tag">Active · Pakistan Transport</span>
+  </div>
+  <div class="project-card reveal">
+    <div class="project-name">Digi_TransX</div>
+    <div class="project-tagline">AI-Powered Goods Transport Digitization System · Pakistan</div>
+    <p style="font-size:14px; font-weight:300; color:var(--text-muted); line-height:1.9; max-width:600px; margin-bottom:24px;">
+      Pakistan's traditional goods transport sector operates on outdated, manual processes — phone calls, paper records, human-dependent coordination. Digi_TransX replaces all of it with a unified, AI-controlled platform that handles order placement, vehicle dispatch, real-time tracking, and logistics management.
+    </p>
+    <div class="feature-list">
+      <div class="feature-item">
+        <div class="feature-num">/ 01</div>
+        <div class="feature-title">AI Order Management</div>
+        <div class="feature-desc">Automated order intake and intelligent routing decisions handled end-to-end by AI.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">/ 02</div>
+        <div class="feature-title">Real-Time Tracking</div>
+        <div class="feature-desc">Live GPS monitoring with intelligent status updates across the entire delivery chain.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">/ 03</div>
+        <div class="feature-title">Voice Command Interface</div>
+        <div class="feature-desc">Future-state: operators manage logistics through natural language voice commands.</div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-num">/ 04</div>
+        <div class="feature-title">Wearable Integration</div>
+        <div class="feature-desc">Long-term vision: smartwatch-based AI control for field operators on the move.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VISION TIMELINE (fixed low-contrast future items) -->
+<section id="vision">
+  <div class="section-label">04 — Roadmap</div>
+  <h2 class="reveal">WHERE WE<br>ARE GOING</h2>
+  <div class="timeline">
+    <div class="timeline-item reveal">
+      <div class="timeline-year">2026</div>
+      <div class="timeline-content">
+        <h3>Transport — Digi_TransX</h3>
+        <p>Launch of Pakistan's first fully AI-controlled goods transport management platform. Digital ordering, real-time tracking, and automated logistics.</p>
+      </div>
+    </div>
+    <div class="timeline-item future reveal">
+      <div class="timeline-year">NEXT</div>
+      <div class="timeline-content">
+        <h3>Education Systems</h3>
+        <p>AI-powered educational infrastructure for institutions across Pakistan. Intelligent content delivery, automated assessment, and adaptive learning systems.</p>
+      </div>
+    </div>
+    <div class="timeline-item future reveal">
+      <div class="timeline-year">FUTURE</div>
+      <div class="timeline-content">
+        <h3>National Infrastructure</h3>
+        <p>Every critical industry in Pakistan operating on AI-first intelligent systems. A fully connected, automated, and self-optimizing national grid.</p>
+      </div>
+    </div>
+    <div class="timeline-item future reveal">
+      <div class="timeline-year">VISION</div>
+      <div class="timeline-content">
+        <h3>Wearable AI Command Layer</h3>
+        <p>Operators controlling entire logistics networks through natural language on wearable devices. Human-AI harmony at its most seamless.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOUNDER -->
+<section id="founder">
+  <div class="section-label">05 — Founder</div>
+  <div class="founder-grid">
+    <div class="founder-badge reveal">
+      <img class="founder-photo" src="WhatsApp Image 2026-06-07 at 5.53.01 PM.jpeg" alt="Muhammad Hassan Azhar">
+      <div class="founder-role">Founder & Visionary</div>
+    </div>
+    <div class="reveal">
+      <h2>MUHAMMAD<br>HASSAN<br>AZHAR</h2>
+      <p>
+        D-HAG was founded with a clear purpose: Pakistan's industries need not just improvement — they need transformation. Muhammad Hassan Azhar established D-HAG in 2026 with the conviction that AI is not the future. It is the present obligation.
+      </p>
+      <p>
+        The company operates on a simple principle — every system that can be made intelligent, must be made intelligent. Starting with transport. Building toward a Pakistan where technology runs the infrastructure, not the other way around.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <h2 class="reveal">THE<br>GRID<br><span>STARTS</span><br>NOW</h2>
+  <p class="reveal">Digital Human Harmony AI Grid · Pakistan · 2026</p>
+  <div class="reveal">
+    <a class="btn-primary" href="contact.html">Get In Touch</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">D-HAG</div>
+  <div class="footer-links">
+    <a href="#about">About</a>
+    <a href="#project">Project</a>
+    <a href="#vision">Vision</a>
+  </div>
+  <div class="footer-copy">© 2026 D-HAG. All rights reserved.</div>
+</footer>
+
+<script>
+  // LOADER SEQUENCE + FADE + REVEAL
+  window.addEventListener('load', () => {
+    const loaderLogo = document.getElementById('loader-logo');
+    const loaderBar  = document.getElementById('loader-bar');
+    const loader     = document.getElementById('loader');
+    const nav        = document.getElementById('nav');
+
+    loaderLogo.style.opacity = '1';
+    setTimeout(() => { loaderBar.style.width = '100%'; }, 180);
+    setTimeout(() => {
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        loader.style.display = 'none';
+        nav.classList.add('visible');
+        // Hero inner animations
+        document.getElementById('hl')?.classList.add('visible');
+        document.getElementById('ht')?.classList.add('visible');
+        document.getElementById('hs')?.classList.add('visible');
+        document.getElementById('hb')?.classList.add('visible');
+        document.getElementById('hscroll')?.classList.add('visible');
+      }, 480);
+    }, 2100);
+  });
+
+  // INTERSECTION OBSERVER FOR SCROLL REVEAL
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, idx) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, idx * 60);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: "0px 0px -20px 0px" });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+</body>
+</html>
+
+
+
+
+
+

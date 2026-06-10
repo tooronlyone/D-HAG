@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Contact D-HAG</title>
+<meta name="description" content="Send a message to D-HAG. Replies are sent from hikyonlyone@gmail.com.">
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Barlow:wght@300;400;600;700;900&display=swap');
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: #fff;
+    color: #000;
+    font-family: 'Barlow', sans-serif;
+    display: grid;
+    place-items: center;
+    padding: 32px;
+  }
+  .card {
+    width: min(900px, 100%);
+    border: 1px solid rgba(0,0,0,0.12);
+    background: #fff;
+    border-radius: 24px;
+    padding: 32px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+  .brand img {
+    width: 54px;
+    height: 54px;
+    object-fit: contain;
+    display: block;
+    background-color: #000;
+    -webkit-mask-image: url('logo.png');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: url('logo.png');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+  }
+  h1 {
+    margin: 0 0 10px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(44px, 8vw, 92px);
+    letter-spacing: 3px;
+    line-height: 0.9;
+  }
+  p {
+    margin: 0 0 24px;
+    color: rgba(0,0,0,0.78);
+    max-width: 720px;
+    line-height: 1.7;
+    font-size: 16px;
+  }
+  form {
+    display: grid;
+    gap: 16px;
+    margin-top: 28px;
+  }
+  input, textarea {
+    width: 100%;
+    border: 1px solid rgba(0,0,0,0.18);
+    background: #f7f7f7;
+    color: #000;
+    padding: 16px 18px;
+    border-radius: 14px;
+    font: inherit;
+    outline: none;
+  }
+  textarea { min-height: 160px; resize: vertical; }
+  button, .back {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #000;
+    background: #000;
+    color: #fff;
+    padding: 14px 20px;
+    border-radius: 999px;
+    font-family: 'Space Mono', monospace;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    text-decoration: none;
+    cursor: pointer;
+    width: fit-content;
+  }
+  .back {
+    margin-top: 18px;
+    background: transparent;
+    color: #000;
+  }
+  #statusMsg {
+    display: none;
+    margin-top: 14px;
+    padding: 14px 18px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+  }
+  #statusMsg.success {
+    display: block;
+    background: rgba(0,128,0,0.08);
+    border: 1px solid rgba(0,128,0,0.18);
+    color: #0a7a2f;
+  }
+  #statusMsg.error {
+    display: block;
+    background: rgba(255,0,0,0.06);
+    border: 1px solid rgba(255,0,0,0.18);
+    color: #b00020;
+  }
+</style>
+</head>
+<body>
+  <main class="card">
+    <div class="brand">
+      <img src="logo.png" alt="D-HAG logo">
+      <div>
+        <div style="font-family:'Space Mono', monospace; letter-spacing:3px; font-size:11px; text-transform:uppercase;">Contact</div>
+        <div style="font-size:18px; color:rgba(0,0,0,0.8);">D-HAG</div>
+      </div>
+    </div>
+
+    <h1>Send Your Message</h1>
+    <p>Enter your name and email, then write your message. It will go directly to the inbox.</p>
+    <p><strong>Replies will come from hikyonlyone@gmail.com.</strong></p>
+
+    <form id="contactForm">
+      <input id="name" type="text" placeholder="Your name" required>
+      <input id="email" type="email" placeholder="Your email" required>
+      <textarea id="message" placeholder="Write your message..." required></textarea>
+      <button type="submit" id="sendBtn">Send Message</button>
+    </form>
+
+    <div id="statusMsg"></div>
+
+    <a class="back" href="index.html">Back to Home</a>
+  </main>
+
+  <script>
+    emailjs.init("Mso_ekFXhMmMQ71HW");
+
+    document.getElementById('contactForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('sendBtn');
+      const status = document.getElementById('statusMsg');
+
+      btn.textContent = 'Sending...';
+      btn.disabled = true;
+
+      emailjs.send("D-HAG", "template_0uq6ucx", {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        message: document.getElementById('message').value.trim()
+      })
+      .then(() => {
+        status.className = 'success';
+        status.textContent = 'Message sent successfully. A reply will come soon.';
+        document.getElementById('contactForm').reset();
+        btn.textContent = 'Send Message';
+        btn.disabled = false;
+      })
+      .catch((err) => {
+        status.className = 'error';
+        status.textContent = 'Something went wrong. Please try again.';
+        console.error(err);
+        btn.textContent = 'Send Message';
+        btn.disabled = false;
+      });
+    });
+  </script>
+</body>
+</html>
