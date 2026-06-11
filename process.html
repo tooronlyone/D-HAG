@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>How It Works — Digi_TransX · D-HAG</title>
+<meta name="description" content="Understand how Digi_TransX works — Pakistan's first AI-powered goods transport platform by D-HAG.">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#ffffff">
+<link rel="icon" href="logo.png" type="image/png">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Mono:wght@400;700&family=Barlow:wght@300;400;600;700;900&display=swap">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --black: #ffffff;
+    --white: #000000;
+    --gray-200: #3a3a3a;
+    --gray-400: #555555;
+    --gray-600: #777777;
+    --gray-800: #e8e8e8;
+    --gray-900: #f5f5f5;
+    --border-subtle: #d9d9d9;
+    --text-muted: #222222;
+    --text-dim: #444444;
+  }
+
+  html { scroll-behavior: smooth; scroll-padding-top: 88px; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: 'Barlow', sans-serif;
+    overflow-x: hidden;
+    line-height: 1.5;
+  }
+
+  ::-webkit-scrollbar { width: 2px; }
+  ::-webkit-scrollbar-track { background: #fff; }
+  ::-webkit-scrollbar-thumb { background: #000; }
+
+  /* ========= LOADER ========= */
+  #loader {
+    position: fixed; inset: 0; background: #fff; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column; gap: 24px;
+    transition: opacity 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  #loader-text {
+    font-family: 'Space Mono', monospace;
+    font-size: 11px; letter-spacing: 6px; color: #000;
+    text-transform: uppercase;
+  }
+  #loader-bar-wrap { width: 200px; height: 1px; background: #e0e0e0; }
+  #loader-bar {
+    height: 1px; width: 0; background: #000;
+    transition: width 1.8s cubic-bezier(0.77, 0, 0.18, 1);
+  }
+  #loader-logo {
+    width: 140px; height: 140px; display: block;
+    background-color: #000;
+    -webkit-mask-image: url('logo.png');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: url('logo.png');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    opacity: 0;
+    transition: opacity 0.6s ease 0.2s;
+  }
+  @media (prefers-color-scheme: dark) { #loader-logo { background-color: #fff; } }
+
+  /* ========= NAV ========= */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 24px 60px;
+    border-bottom: 1px solid var(--border-subtle);
+    background: rgba(255,255,255,0.94);
+    backdrop-filter: blur(12px);
+    opacity: 0; transform: translateY(-16px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  nav.visible { opacity: 1; transform: translateY(0); }
+  .nav-logo {
+    display: inline-flex; align-items: center; gap: 14px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 22px; letter-spacing: 8px; color: #000;
+    text-decoration: none;
+  }
+  .nav-logo img {
+    width: 48px; height: 48px; display: block;
+    background-color: #000;
+    -webkit-mask-image: url('logo.png');
+    -webkit-mask-repeat: no-repeat;
+    -webkit-mask-position: center;
+    -webkit-mask-size: contain;
+    mask-image: url('logo.png');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+  }
+  @media (prefers-color-scheme: dark) { .nav-logo img { background-color: #fff; } }
+  .nav-logo span { white-space: nowrap; }
+  .nav-links { display: flex; gap: 44px; list-style: none; }
+  .nav-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: #000;
+    text-decoration: none; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .nav-cta {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px;
+    color: #000; background: #fff;
+    padding: 10px 24px;
+    text-decoration: none; text-transform: uppercase;
+    border: 1px solid #000;
+    transition: background 0.2s, color 0.2s;
+  }
+  .nav-cta:hover { background: #f5f5f5; }
+
+  /* ========= GLOBAL SECTIONS ========= */
+  section {
+    padding: 120px 60px;
+    border-top: 1px solid var(--border-subtle);
+  }
+  .section-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 5px; color: #000;
+    text-transform: uppercase; margin-bottom: 60px;
+    display: flex; align-items: center; gap: 20px;
+  }
+  .section-label::before {
+    content: ''; display: block;
+    width: 30px; height: 1px; background: #000;
+  }
+
+  /* ========= HERO ========= */
+  #hero {
+    min-height: 60vh;
+    display: flex; flex-direction: column;
+    justify-content: center;
+    padding: 160px 60px 100px 60px;
+    background: #fff;
+    border-top: none;
+  }
+  .hero-breadcrumb {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; color: #888;
+    text-transform: uppercase; margin-bottom: 32px;
+    display: flex; align-items: center; gap: 12px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.8s ease 0.2s, transform 0.8s ease 0.2s;
+  }
+  .hero-breadcrumb.visible { opacity: 1; transform: translateY(0); }
+  .hero-breadcrumb a { color: #888; text-decoration: none; }
+  .hero-breadcrumb span { color: #000; }
+  .hero-breadcrumb::before {
+    content: ''; display: block; width: 20px; height: 1px; background: #aaa;
+  }
+  #hero h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(60px, 10vw, 140px);
+    line-height: 0.9; letter-spacing: 4px; color: #000;
+    opacity: 0; transform: translateY(40px);
+    transition: opacity 1s ease 0.4s, transform 1s ease 0.4s;
+  }
+  #hero h1.visible { opacity: 1; transform: translateY(0); }
+  #hero h1 span { color: #555; }
+  .hero-desc {
+    margin-top: 40px;
+    font-size: 15px; font-weight: 300; letter-spacing: 1px;
+    color: #333; max-width: 600px; line-height: 1.9;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.8s ease 0.7s, transform 0.8s ease 0.7s;
+  }
+  .hero-desc.visible { opacity: 1; transform: translateY(0); }
+  .hero-tag {
+    margin-top: 32px;
+    display: inline-flex; align-items: center; gap: 12px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 3px; color: #000;
+    text-transform: uppercase; border: 1px solid #d9d9d9;
+    padding: 8px 16px;
+    opacity: 0; transform: translateY(16px);
+    transition: opacity 0.8s ease 0.9s, transform 0.8s ease 0.9s;
+  }
+  .hero-tag.visible { opacity: 1; transform: translateY(0); }
+  .hero-tag::before {
+    content: ''; width: 6px; height: 6px;
+    background: #000; border-radius: 50%;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(0.7); }
+  }
+
+  /* ========= PROBLEM SECTION ========= */
+  #problem { background: #fff; }
+  #problem h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 72px);
+    letter-spacing: 2px; color: #000; margin-bottom: 60px;
+    line-height: 0.95;
+  }
+  .problem-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: var(--border-subtle);
+    border: 1px solid var(--border-subtle);
+    margin-top: 40px;
+  }
+  .problem-card {
+    background: #fff; padding: 44px 36px;
+    position: relative;
+  }
+  .problem-icon {
+    font-size: 28px; margin-bottom: 20px; display: block;
+  }
+  .problem-title {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px; color: #000;
+    text-transform: uppercase; margin-bottom: 14px;
+  }
+  .problem-desc {
+    font-size: 13px; font-weight: 300; color: #444; line-height: 1.8;
+  }
+  .problem-num {
+    position: absolute; top: 24px; right: 24px;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px; color: #f0f0f0; letter-spacing: 2px;
+  }
+
+  /* ========= FLOW DIAGRAM SECTION ========= */
+  #flow { background: var(--gray-900); }
+  #flow h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 72px);
+    letter-spacing: 2px; color: #000; margin-bottom: 16px;
+    line-height: 0.95;
+  }
+  #flow .sub {
+    font-size: 14px; font-weight: 300; color: #555;
+    letter-spacing: 1px; margin-bottom: 80px; max-width: 520px;
+    line-height: 1.8;
+  }
+
+  /* Flow Diagram */
+  .flow-diagram {
+    width: 100%; overflow-x: auto;
+    padding-bottom: 20px;
+  }
+  .flow-track {
+    display: flex; align-items: stretch;
+    gap: 0; min-width: 900px;
+  }
+  .flow-node {
+    flex: 1; position: relative;
+    display: flex; flex-direction: column;
+  }
+  .flow-node-inner {
+    border: 1px solid #d9d9d9;
+    background: #fff;
+    padding: 32px 28px;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .flow-node-inner::before {
+    content: '';
+    position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px;
+    background: #000;
+  }
+  .flow-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 48px; color: #f0f0f0;
+    position: absolute; top: 12px; right: 16px;
+    line-height: 1;
+  }
+  .flow-icon { font-size: 24px; margin-bottom: 16px; display: block; }
+  .flow-actor {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px; letter-spacing: 3px; color: #888;
+    text-transform: uppercase; margin-bottom: 10px;
+  }
+  .flow-title {
+    font-size: 13px; font-weight: 700; color: #000;
+    letter-spacing: 1px; text-transform: uppercase;
+    margin-bottom: 10px;
+  }
+  .flow-desc {
+    font-size: 12px; font-weight: 300; color: #555; line-height: 1.7;
+  }
+  .flow-arrow {
+    width: 48px; display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  .flow-arrow svg {
+    width: 28px; height: 28px; flex-shrink: 0;
+  }
+
+  /* ========= STEP BY STEP DETAIL ========= */
+  #steps { background: #fff; }
+  #steps h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 72px);
+    letter-spacing: 2px; color: #000; margin-bottom: 16px;
+    line-height: 0.95;
+  }
+  #steps .sub {
+    font-size: 14px; font-weight: 300; color: #555;
+    letter-spacing: 1px; margin-bottom: 80px; max-width: 520px;
+    line-height: 1.8;
+  }
+  .steps-wrapper {
+    display: flex; flex-direction: column; gap: 0;
+    border-left: 1px solid #d9d9d9;
+    margin-left: 20px;
+  }
+  .step-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 1fr;
+    gap: 48px;
+    padding: 56px 0 56px 60px;
+    border-bottom: 1px solid #ececec;
+    position: relative;
+    align-items: start;
+  }
+  .step-row::before {
+    content: ''; position: absolute;
+    left: -5px; top: 64px;
+    width: 9px; height: 9px;
+    background: #000;
+  }
+  .step-num-block {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .step-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 56px; color: #000; letter-spacing: 2px; line-height: 1;
+  }
+  .step-actor-tag {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px; letter-spacing: 3px; color: #888;
+    text-transform: uppercase;
+    border: 1px solid #e0e0e0;
+    padding: 4px 8px; display: inline-block;
+  }
+  .step-content h3 {
+    font-size: 16px; font-weight: 700; letter-spacing: 1px;
+    color: #000; text-transform: uppercase; margin-bottom: 14px;
+  }
+  .step-content p {
+    font-size: 14px; font-weight: 300; color: #333;
+    line-height: 1.9; margin-bottom: 20px;
+  }
+  .step-bullets {
+    display: flex; flex-direction: column; gap: 8px;
+    margin-top: 4px;
+  }
+  .step-bullet {
+    display: flex; align-items: flex-start; gap: 12px;
+    font-size: 13px; font-weight: 300; color: #444; line-height: 1.6;
+  }
+  .step-bullet::before {
+    content: '/'; font-family: 'Space Mono', monospace;
+    font-size: 10px; color: #000; flex-shrink: 0; margin-top: 2px;
+  }
+  .step-visual {
+    background: var(--gray-900);
+    border: 1px solid #e8e8e8;
+    padding: 32px;
+    display: flex; flex-direction: column; gap: 12px;
+    align-self: start;
+  }
+  .step-visual-label {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px; letter-spacing: 3px; color: #888;
+    text-transform: uppercase; margin-bottom: 8px;
+  }
+  .mini-ui {
+    display: flex; flex-direction: column; gap: 8px;
+  }
+  .mini-field {
+    background: #fff; border: 1px solid #e0e0e0;
+    padding: 10px 14px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; color: #555; letter-spacing: 1px;
+  }
+  .mini-btn {
+    background: #000; color: #fff;
+    padding: 10px 14px; text-align: center;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 2px;
+    text-transform: uppercase;
+  }
+  .mini-status {
+    display: flex; align-items: center; gap: 8px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 1px; color: #555;
+  }
+  .mini-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: #000; flex-shrink: 0;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+  .mini-dot.static { animation: none; background: #aaa; }
+  .mini-dot.done { animation: none; background: #333; }
+
+  .mini-route {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .mini-route-item {
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; color: #555; letter-spacing: 1px;
+  }
+  .mini-route-icon { font-size: 12px; }
+
+  .transporter-cards {
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .transporter-card {
+    background: #fff; border: 1px solid #e0e0e0;
+    padding: 10px 14px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .transporter-card.selected { border-color: #000; }
+  .tc-name {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; color: #000; letter-spacing: 1px;
+  }
+  .tc-badge {
+    font-family: 'Space Mono', monospace;
+    font-size: 7px; letter-spacing: 1px;
+    color: #fff; background: #000;
+    padding: 3px 6px; text-transform: uppercase;
+  }
+  .tc-badge.pending { background: #aaa; }
+
+  /* ========= ROLES SECTION ========= */
+  #roles { background: var(--gray-900); }
+  #roles h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 72px);
+    letter-spacing: 2px; color: #000; margin-bottom: 60px;
+    line-height: 0.95;
+  }
+  .roles-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 1px; background: #d9d9d9;
+    border: 1px solid #d9d9d9;
+  }
+  .role-card {
+    background: #fff; padding: 48px 36px;
+    position: relative; overflow: hidden;
+  }
+  .role-card::after {
+    content: ''; position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 3px; background: #000;
+  }
+  .role-emoji { font-size: 32px; margin-bottom: 20px; display: block; }
+  .role-title {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 32px; letter-spacing: 2px; color: #000;
+    margin-bottom: 16px; line-height: 1;
+  }
+  .role-sub {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px; letter-spacing: 3px; color: #888;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .role-list {
+    display: flex; flex-direction: column; gap: 10px;
+  }
+  .role-item {
+    display: flex; align-items: flex-start; gap: 10px;
+    font-size: 13px; font-weight: 300; color: #444; line-height: 1.6;
+  }
+  .role-item::before {
+    content: '→'; font-family: 'Space Mono', monospace;
+    font-size: 9px; color: #000; flex-shrink: 0; margin-top: 3px;
+  }
+
+  /* ========= AI ENGINE ========= */
+  #ai-engine { background: #000; color: #fff; }
+  #ai-engine .section-label { color: #555; }
+  #ai-engine .section-label::before { background: #444; }
+  #ai-engine h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 72px);
+    letter-spacing: 2px; color: #fff; margin-bottom: 16px;
+    line-height: 0.95;
+  }
+  #ai-engine .sub {
+    font-size: 14px; font-weight: 300; color: #888;
+    letter-spacing: 1px; margin-bottom: 80px; max-width: 520px;
+    line-height: 1.8;
+  }
+  .ai-grid {
+    display: grid; grid-template-columns: repeat(2, 1fr);
+    gap: 1px; background: #222;
+    border: 1px solid #222;
+  }
+  .ai-card {
+    background: #0a0a0a; padding: 44px 36px;
+    border: 1px solid #1a1a1a;
+  }
+  .ai-card-num {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 3px; color: #444;
+    text-transform: uppercase; margin-bottom: 20px;
+  }
+  .ai-card-title {
+    font-size: 15px; font-weight: 700; letter-spacing: 1px;
+    color: #fff; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .ai-card-desc {
+    font-size: 13px; font-weight: 300; color: #777; line-height: 1.8;
+  }
+  .ai-card-icon { font-size: 28px; margin-bottom: 20px; display: block; }
+
+  /* ========= FUTURE ========= */
+  #future { background: #fff; }
+  #future h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(36px, 5vw, 72px);
+    letter-spacing: 2px; color: #000; margin-bottom: 60px;
+    line-height: 0.95;
+  }
+  .future-track {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 1px; background: #d9d9d9;
+    border: 1px solid #d9d9d9;
+  }
+  .future-card {
+    background: #fff; padding: 40px 28px;
+    position: relative; overflow: hidden;
+  }
+  .future-phase {
+    font-family: 'Space Mono', monospace;
+    font-size: 8px; letter-spacing: 3px; color: #aaa;
+    text-transform: uppercase; margin-bottom: 16px;
+  }
+  .future-icon { font-size: 28px; margin-bottom: 16px; display: block; }
+  .future-title {
+    font-family: 'Barlow', sans-serif;
+    font-size: 15px; font-weight: 700; letter-spacing: 1px;
+    color: #000; text-transform: uppercase; margin-bottom: 12px;
+  }
+  .future-desc {
+    font-size: 12px; font-weight: 300; color: #666; line-height: 1.7;
+  }
+  .future-card.now .future-phase { color: #000; }
+  .future-card.now::before {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 3px; background: #000;
+  }
+
+  /* ========= CTA ========= */
+  #cta {
+    text-align: center; padding: 160px 60px;
+    background: var(--gray-900);
+  }
+  #cta h2 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(48px, 8vw, 110px);
+    letter-spacing: 4px; color: #000; line-height: 0.9;
+    margin-bottom: 32px;
+  }
+  #cta p {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 4px; color: #888;
+    text-transform: uppercase; margin-bottom: 56px;
+  }
+  .btn-primary {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px;
+    color: #000; background: #fff;
+    padding: 16px 36px; text-decoration: none;
+    text-transform: uppercase; border: 1px solid #000;
+    transition: background 0.2s; display: inline-block;
+    margin: 8px;
+  }
+  .btn-primary:hover { background: #f5f5f5; }
+  .btn-secondary {
+    font-family: 'Space Mono', monospace;
+    font-size: 10px; letter-spacing: 3px;
+    color: #000; background: transparent;
+    padding: 16px 36px; text-decoration: none;
+    text-transform: uppercase; border: 1px solid #d9d9d9;
+    transition: border-color 0.2s; display: inline-block;
+    margin: 8px;
+  }
+  .btn-secondary:hover { border-color: #000; }
+
+  /* ========= FOOTER ========= */
+  footer {
+    border-top: 1px solid var(--border-subtle);
+    padding: 40px 60px;
+    display: flex; justify-content: space-between; align-items: center;
+    flex-wrap: wrap; gap: 20px;
+    background: #fff;
+  }
+  .footer-logo {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 18px; letter-spacing: 6px; color: #000;
+  }
+  .footer-copy {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 3px; color: #888;
+    text-transform: uppercase;
+  }
+  .footer-links { display: flex; gap: 32px; }
+  .footer-links a {
+    font-family: 'Space Mono', monospace;
+    font-size: 9px; letter-spacing: 3px; color: #888;
+    text-decoration: none; text-transform: uppercase;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: #000; }
+
+  /* ========= REVEAL ========= */
+  .reveal {
+    opacity: 0; transform: translateY(30px);
+    transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.8s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ========= RESPONSIVE ========= */
+  @media (max-width: 900px) {
+    .problem-grid { grid-template-columns: 1fr 1fr; }
+    .roles-grid { grid-template-columns: 1fr; }
+    .ai-grid { grid-template-columns: 1fr; }
+    .future-track { grid-template-columns: repeat(2, 1fr); }
+    .step-row { grid-template-columns: 80px 1fr; }
+    .step-visual { display: none; }
+  }
+  @media (max-width: 768px) {
+    nav { padding: 18px 24px; }
+    .nav-links, .nav-cta { display: none; }
+    section, footer { padding-left: 24px; padding-right: 24px; }
+    #hero { padding: 130px 24px 80px 24px; }
+    .problem-grid { grid-template-columns: 1fr; }
+    .future-track { grid-template-columns: 1fr; }
+    .step-row { grid-template-columns: 1fr; gap: 20px; padding-left: 32px; }
+    .step-row::before { left: -5px; top: 20px; }
+    .steps-wrapper { margin-left: 8px; }
+    .flow-track { min-width: 700px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- LOADER -->
+<div id="loader">
+  <img id="loader-logo" src="logo.png" alt="D-HAG">
+  <div id="loader-text">Loading Process</div>
+  <div id="loader-bar-wrap"><div id="loader-bar"></div></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a class="nav-logo" href="index.html">
+    <img src="logo.png" alt="D-HAG logo">
+    <span>D-HAG</span>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#project">Project</a></li>
+    <li><a href="index.html#vision">Vision</a></li>
+    <li><a href="index.html#founder">Founder</a></li>
+  </ul>
+  <a class="nav-cta" href="contact.html">Contact</a>
+</nav>
+
+<!-- HERO -->
+<section id="hero">
+  <div class="hero-breadcrumb" id="hb">
+    <a href="index.html">D-HAG</a> → <span>Digi_TransX · How It Works</span>
+  </div>
+  <h1 id="ht">
+    HOW<br>
+    <span>DIGI</span><br>
+    TRANSX<br>
+    WORKS
+  </h1>
+  <p class="hero-desc" id="hd">
+    Pakistan's transport sector runs on phone calls, paper records, and guesswork.
+    Digi_TransX replaces all of it — one intelligent platform that connects senders,
+    transporters, and AI into a single, seamless system.
+  </p>
+  <div class="hero-tag" id="htag">Active Project · Pakistan Transport · 2026</div>
+</section>
+
+<!-- PROBLEM -->
+<section id="problem">
+  <div class="section-label">01 — The Problem</div>
+  <h2 class="reveal">WHAT'S BROKEN<br>RIGHT NOW</h2>
+  <p class="reveal" style="font-size:14px; font-weight:300; color:#555; max-width:600px; line-height:1.9; margin-bottom:0;">
+    Pakistan's goods transport industry is a ₨ trillion-scale sector running on pre-digital methods.
+    Every single day, thousands of shipments are managed through informal calls and handwritten notes — leading to delays, lost cargo, price manipulation, and zero accountability.
+  </p>
+  <div class="problem-grid">
+    <div class="problem-card reveal">
+      <span class="problem-icon">📞</span>
+      <div class="problem-num">01</div>
+      <div class="problem-title">Manual Booking</div>
+      <p class="problem-desc">Every transport booking happens through phone calls and personal connections. No platform, no record, no system. If the middleman is unavailable, the cargo waits.</p>
+    </div>
+    <div class="problem-card reveal">
+      <span class="problem-icon">📄</span>
+      <div class="problem-num">02</div>
+      <div class="problem-title">Paper Records</div>
+      <p class="problem-desc">Receipts, manifests, delivery confirmations — all on paper. Documents get lost, disputed, or manipulated. There is no digital trail of anything.</p>
+    </div>
+    <div class="problem-card reveal">
+      <span class="problem-icon">❓</span>
+      <div class="problem-num">03</div>
+      <div class="problem-title">Zero Tracking</div>
+      <p class="problem-desc">Once cargo leaves the warehouse, the sender has no idea where it is. No GPS. No status updates. No ETA. Just waiting and hoping for the best.</p>
+    </div>
+    <div class="problem-card reveal">
+      <span class="problem-icon">💸</span>
+      <div class="problem-num">04</div>
+      <div class="problem-title">Price Manipulation</div>
+      <p class="problem-desc">Rates are negotiated in the dark. No transparent pricing, no market benchmarks. Middlemen pocket significant margins while both senders and transporters lose out.</p>
+    </div>
+    <div class="problem-card reveal">
+      <span class="problem-icon">⏳</span>
+      <div class="problem-num">05</div>
+      <div class="problem-title">Delays & Disputes</div>
+      <p class="problem-desc">Without a system, every dispute becomes a personal conflict. Delays are common, accountability is absent, and there is no formal resolution process.</p>
+    </div>
+    <div class="problem-card reveal">
+      <span class="problem-icon">🔗</span>
+      <div class="problem-num">06</div>
+      <div class="problem-title">Disconnected Parties</div>
+      <p class="problem-desc">Senders, transporters, and receivers operate in separate silos. No shared platform means constant miscommunication and repeated information transfers by phone.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FLOW DIAGRAM -->
+<section id="flow">
+  <div class="section-label">02 — The Flow</div>
+  <h2 class="reveal">THE COMPLETE<br>JOURNEY</h2>
+  <p class="sub reveal">From the moment a sender places a request to the final delivery confirmation — here is every step, visualized.</p>
+
+  <div class="flow-diagram reveal">
+    <div class="flow-track">
+
+      <div class="flow-node">
+        <div class="flow-node-inner">
+          <div class="flow-num">1</div>
+          <span class="flow-icon">📦</span>
+          <div class="flow-actor">Sender</div>
+          <div class="flow-title">Place Order</div>
+          <p class="flow-desc">Sender logs in and submits a transport request — cargo type, weight, pickup and drop location, preferred date.</p>
+        </div>
+      </div>
+
+      <div class="flow-arrow">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 14H22M22 14L15 7M22 14L15 21" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="flow-node">
+        <div class="flow-node-inner">
+          <div class="flow-num">2</div>
+          <span class="flow-icon">🤖</span>
+          <div class="flow-actor">AI Engine</div>
+          <div class="flow-title">AI Analyzes</div>
+          <p class="flow-desc">The system instantly analyzes the request — route, load type, distance, and availability — then finds the best-matched transporters.</p>
+        </div>
+      </div>
+
+      <div class="flow-arrow">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 14H22M22 14L15 7M22 14L15 21" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="flow-node">
+        <div class="flow-node-inner">
+          <div class="flow-num">3</div>
+          <span class="flow-icon">🚛</span>
+          <div class="flow-actor">Transporter</div>
+          <div class="flow-title">Accept / Decline</div>
+          <p class="flow-desc">Matched transporters receive the job alert. They review the details and choose to accept or decline within the set time window.</p>
+        </div>
+      </div>
+
+      <div class="flow-arrow">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 14H22M22 14L15 7M22 14L15 21" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="flow-node">
+        <div class="flow-node-inner">
+          <div class="flow-num">4</div>
+          <span class="flow-icon">📍</span>
+          <div class="flow-actor">System</div>
+          <div class="flow-title">Live Tracking</div>
+          <p class="flow-desc">Once accepted, real-time GPS tracking begins. Both sender and receiver can follow the shipment live on the platform.</p>
+        </div>
+      </div>
+
+      <div class="flow-arrow">
+        <svg viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 14H22M22 14L15 7M22 14L15 21" stroke="#000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <div class="flow-node">
+        <div class="flow-node-inner">
+          <div class="flow-num">5</div>
+          <span class="flow-icon">✅</span>
+          <div class="flow-actor">All Parties</div>
+          <div class="flow-title">Delivered & Confirmed</div>
+          <p class="flow-desc">On delivery, the receiver confirms. The system logs the completed job, releases payment, and updates all records automatically.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- STEP BY STEP -->
+<section id="steps">
+  <div class="section-label">03 — Step By Step</div>
+  <h2 class="reveal">EVERY STEP,<br>EXPLAINED</h2>
+  <p class="sub reveal">A detailed breakdown of each stage in plain language — so anyone can understand exactly how the system works.</p>
+
+  <div class="steps-wrapper">
+
+    <!-- Step 1 -->
+    <div class="step-row reveal">
+      <div class="step-num-block">
+        <div class="step-num">01</div>
+        <div class="step-actor-tag">Sender</div>
+      </div>
+      <div class="step-content">
+        <h3>Sender Creates a Transport Request</h3>
+        <p>
+          A business owner, factory, or individual who needs to move goods opens the Digi_TransX platform and fills in a simple order form. No phone calls. No middlemen. Just a clean digital form that takes under 2 minutes to complete.
+        </p>
+        <div class="step-bullets">
+          <div class="step-bullet">Enter pickup and delivery location</div>
+          <div class="step-bullet">Describe cargo — type, weight, quantity</div>
+          <div class="step-bullet">Select preferred date and time</div>
+          <div class="step-bullet">Set budget or request AI-suggested price</div>
+        </div>
+      </div>
+      <div class="step-visual">
+        <div class="step-visual-label">Order Form Preview</div>
+        <div class="mini-ui">
+          <div class="mini-field">📦 Cargo: Cotton Bales · 2,400 kg</div>
+          <div class="mini-field">📍 From: Faisalabad Industrial Zone</div>
+          <div class="mini-field">🎯 To: Karachi Port</div>
+          <div class="mini-field">📅 Date: 14 Jun 2026 · 08:00 AM</div>
+          <div class="mini-btn">Submit Request →</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-row reveal">
+      <div class="step-num-block">
+        <div class="step-num">02</div>
+        <div class="step-actor-tag">AI Engine</div>
+      </div>
+      <div class="step-content">
+        <h3>AI Processes & Matches Transporters</h3>
+        <p>
+          The moment the request is submitted, the AI engine takes over. It does not wait for a human to review anything. Within seconds, it analyzes the request and identifies the most suitable transporters from the registered network.
+        </p>
+        <div class="step-bullets">
+          <div class="step-bullet">AI reads cargo type and route requirements</div>
+          <div class="step-bullet">Checks transporter availability in real time</div>
+          <div class="step-bullet">Matches by vehicle capacity, location, rating, and price</div>
+          <div class="step-bullet">Sends job alerts to top 3–5 matched transporters simultaneously</div>
+        </div>
+      </div>
+      <div class="step-visual">
+        <div class="step-visual-label">AI Matching Engine</div>
+        <div class="mini-ui">
+          <div class="mini-status"><div class="mini-dot"></div> Analyzing cargo requirements...</div>
+          <div class="mini-status"><div class="mini-dot"></div> Scanning transporter network...</div>
+          <div class="mini-status"><div class="mini-dot static"></div> Route: 1,312 km · Est. 18 hrs</div>
+          <div class="mini-status"><div class="mini-done"></div> 4 transporters matched ✓</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-row reveal">
+      <div class="step-num-block">
+        <div class="step-num">03</div>
+        <div class="step-actor-tag">Transporter</div>
+      </div>
+      <div class="step-content">
+        <h3>Transporter Receives & Accepts the Job</h3>
+        <p>
+          Registered transporters receive a notification on their Digi_TransX dashboard. They can see all details of the job — cargo, route, price, and the sender's rating. They make their decision and respond.
+        </p>
+        <div class="step-bullets">
+          <div class="step-bullet">Transporter sees full job details before deciding</div>
+          <div class="step-bullet">Accepts the job or proposes a counter-offer on price</div>
+          <div class="step-bullet">Must respond within the time window or job moves to next match</div>
+          <div class="step-bullet">On acceptance, sender is instantly notified with transporter details</div>
+        </div>
+      </div>
+      <div class="step-visual">
+        <div class="step-visual-label">Transporter Dashboard</div>
+        <div class="transporter-cards">
+          <div class="transporter-card selected">
+            <div>
+              <div class="tc-name">Malik Logistics</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#888;margin-top:3px;">⭐ 4.8 · 312 trips</div>
+            </div>
+            <div class="tc-badge">Accepted</div>
+          </div>
+          <div class="transporter-card">
+            <div>
+              <div class="tc-name">FastMove PK</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#888;margin-top:3px;">⭐ 4.5 · 187 trips</div>
+            </div>
+            <div class="tc-badge pending">Pending</div>
+          </div>
+          <div class="transporter-card">
+            <div>
+              <div class="tc-name">Shaheen Cargo</div>
+              <div style="font-family:'Space Mono',monospace;font-size:8px;color:#888;margin-top:3px;">⭐ 4.6 · 229 trips</div>
+            </div>
+            <div class="tc-badge pending">Pending</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4 -->
+    <div class="step-row reveal">
+      <div class="step-num-block">
+        <div class="step-num">04</div>
+        <div class="step-actor-tag">System</div>
+      </div>
+      <div class="step-content">
+        <h3>Real-Time GPS Tracking Begins</h3>
+        <p>
+          The moment the transporter picks up the cargo, live tracking activates. The sender, receiver, and Digi_TransX admin can all see the truck's location in real time. No more calling to ask "where is my cargo?"
+        </p>
+        <div class="step-bullets">
+          <div class="step-bullet">Live GPS location updated every 30 seconds</div>
+          <div class="step-bullet">Estimated arrival time recalculated continuously</div>
+          <div class="step-bullet">Automatic alerts if route deviation is detected</div>
+          <div class="step-bullet">All parties receive status updates at key checkpoints</div>
+        </div>
+      </div>
+      <div class="step-visual">
+        <div class="step-visual-label">Live Tracking View</div>
+        <div class="mini-route">
+          <div class="mini-route-item"><span class="mini-route-icon">🏭</span> Faisalabad · Departed 08:14 AM ✓</div>
+          <div class="mini-route-item"><span class="mini-route-icon">🔵</span> Multan Bypass · 11:42 AM ✓</div>
+          <div class="mini-route-item"><span class="mini-route-icon">🚛</span> <strong>Current · Sukkur · 04:28 PM</strong></div>
+          <div class="mini-route-item"><span class="mini-route-icon">⚪</span> Karachi Port · ETA 11:00 PM</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-row reveal">
+      <div class="step-num-block">
+        <div class="step-num">05</div>
+        <div class="step-actor-tag">All Parties</div>
+      </div>
+      <div class="step-content">
+        <h3>Delivery Confirmed & Records Closed</h3>
+        <p>
+          When the cargo reaches its destination, the receiver confirms delivery on the platform. This single action triggers the entire completion sequence — payment release, record creation, and rating submission. No paperwork, no disputes, no delays.
+        </p>
+        <div class="step-bullets">
+          <div class="step-bullet">Receiver confirms delivery with one tap</div>
+          <div class="step-bullet">Payment is automatically released to transporter</div>
+          <div class="step-bullet">Full digital record is created and stored permanently</div>
+          <div class="step-bullet">Both parties rate each other — building trust on the platform</div>
+          <div class="step-bullet">Sender gets a full delivery report with timeline and route</div>
+        </div>
+      </div>
+      <div class="step-visual">
+        <div class="step-visual-label">Delivery Confirmation</div>
+        <div class="mini-ui">
+          <div class="mini-status"><div class="mini-dot done"></div> Delivered · 11:06 PM ✓</div>
+          <div class="mini-field">⭐ Rate this delivery: ★★★★★</div>
+          <div class="mini-field">💳 Payment released: ₨ 48,500</div>
+          <div class="mini-field">📋 Report saved to your account</div>
+          <div class="mini-btn">View Full Report →</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ROLES -->
+<section id="roles">
+  <div class="section-label">04 — Who Is Involved</div>
+  <h2 class="reveal">THREE ROLES,<br>ONE SYSTEM</h2>
+  <div class="roles-grid">
+    <div class="role-card reveal">
+      <span class="role-emoji">📦</span>
+      <div class="role-title">Sender</div>
+      <div class="role-sub">The person who needs to move goods</div>
+      <div class="role-list">
+        <div class="role-item">Creates and submits transport orders</div>
+        <div class="role-item">Tracks shipment in real time</div>
+        <div class="role-item">Confirms delivery and rates the transporter</div>
+        <div class="role-item">Views full history and reports</div>
+      </div>
+    </div>
+    <div class="role-card reveal">
+      <span class="role-emoji">🚛</span>
+      <div class="role-title">Transporter</div>
+      <div class="role-sub">The driver or logistics company</div>
+      <div class="role-list">
+        <div class="role-item">Receives matched job alerts automatically</div>
+        <div class="role-item">Accepts or declines jobs from dashboard</div>
+        <div class="role-item">Updates status at each checkpoint</div>
+        <div class="role-item">Gets paid automatically on delivery confirmation</div>
+      </div>
+    </div>
+    <div class="role-card reveal">
+      <span class="role-emoji">🤖</span>
+      <div class="role-title">AI System</div>
+      <div class="role-sub">The intelligence running it all</div>
+      <div class="role-list">
+        <div class="role-item">Matches every order to the best transporter</div>
+        <div class="role-item">Monitors all active shipments simultaneously</div>
+        <div class="role-item">Detects anomalies and sends instant alerts</div>
+        <div class="role-item">Learns and improves with every completed job</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AI ENGINE -->
+<section id="ai-engine">
+  <div class="section-label">05 — The AI Engine</div>
+  <h2 class="reveal">INTELLIGENCE<br>BEHIND THE<br>SYSTEM</h2>
+  <p class="sub reveal">Digi_TransX is not just software. It is an AI-controlled logistics brain that makes real-time decisions, learns from every delivery, and gets smarter over time.</p>
+  <div class="ai-grid">
+    <div class="ai-card reveal">
+      <span class="ai-card-icon">⚡</span>
+      <div class="ai-card-num">/ 01 — Smart Matching</div>
+      <div class="ai-card-title">Instant Transporter Matching</div>
+      <p class="ai-card-desc">The AI analyzes cargo type, weight, route, distance, transporter history, and vehicle availability in milliseconds. It selects the optimal match — not just the nearest truck, but the right truck for the right job.</p>
+    </div>
+    <div class="ai-card reveal">
+      <span class="ai-card-icon">🗺️</span>
+      <div class="ai-card-num">/ 02 — Route Intelligence</div>
+      <div class="ai-card-title">Dynamic Route Optimization</div>
+      <p class="ai-card-desc">Routes are calculated and updated in real time based on traffic, road conditions, and historical delivery data. The AI continuously re-optimizes to ensure the fastest, most cost-effective path to the destination.</p>
+    </div>
+    <div class="ai-card reveal">
+      <span class="ai-card-icon">🔔</span>
+      <div class="ai-card-num">/ 03 — Anomaly Detection</div>
+      <div class="ai-card-title">Automatic Alert System</div>
+      <p class="ai-card-desc">If a truck deviates from its route, stops unexpectedly, or falls significantly behind schedule, the system detects the anomaly instantly and alerts all relevant parties — sender, receiver, and admin.</p>
+    </div>
+    <div class="ai-card reveal">
+      <span class="ai-card-icon">📊</span>
+      <div class="ai-card-num">/ 04 — Continuous Learning</div>
+      <div class="ai-card-title">Gets Smarter Every Day</div>
+      <p class="ai-card-desc">Every completed delivery feeds data back into the AI model. Over time, matching accuracy improves, pricing becomes more precise, and the system builds a reliable network of trusted transporters automatically.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FUTURE -->
+<section id="future">
+  <div class="section-label">06 — What's Coming</div>
+  <h2 class="reveal">THE ROAD<br>AHEAD</h2>
+  <div class="future-track">
+    <div class="future-card now reveal">
+      <div class="future-phase">Now · 2026</div>
+      <span class="future-icon">🚛</span>
+      <div class="future-title">Digital Transport Platform</div>
+      <p class="future-desc">Order placement, AI matching, real-time GPS tracking, and automated payment. The core platform — live and operational.</p>
+    </div>
+    <div class="future-card reveal">
+      <div class="future-phase">Phase 2</div>
+      <span class="future-icon">🎙️</span>
+      <div class="future-title">Voice Command Interface</div>
+      <p class="future-desc">Transporters and operators will manage their entire workflow through natural language voice commands — no screen required.</p>
+    </div>
+    <div class="future-card reveal">
+      <div class="future-phase">Phase 3</div>
+      <span class="future-icon">⌚</span>
+      <div class="future-title">Wearable AI Control</div>
+      <p class="future-desc">Field operators will manage logistics from smartwatches. Confirmations, alerts, and status updates — all from the wrist.</p>
+    </div>
+    <div class="future-card reveal">
+      <div class="future-phase">Vision</div>
+      <span class="future-icon">🇵🇰</span>
+      <div class="future-title">National Grid</div>
+      <p class="future-desc">Every goods movement across Pakistan tracked, optimized, and managed through one AI-powered national logistics infrastructure.</p>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="cta">
+  <h2 class="reveal">READY TO<br><span>JOIN</span><br>THE GRID?</h2>
+  <p class="reveal">Digi_TransX · Pakistan · 2026 · D-HAG</p>
+  <div class="reveal">
+    <a class="btn-primary" href="contact.html">Get In Touch</a>
+    <a class="btn-secondary" href="index.html">Back to D-HAG</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">D-HAG</div>
+  <div class="footer-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#project">Project</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 D-HAG. All rights reserved.</div>
+</footer>
+
+<script>
+  // LOADER
+  window.addEventListener('load', () => {
+    const loaderLogo = document.getElementById('loader-logo');
+    const loaderBar  = document.getElementById('loader-bar');
+    const loader     = document.getElementById('loader');
+    const nav        = document.getElementById('nav');
+
+    loaderLogo.style.opacity = '1';
+    setTimeout(() => { loaderBar.style.width = '100%'; }, 180);
+    setTimeout(() => {
+      loader.style.opacity = '0';
+      setTimeout(() => {
+        loader.style.display = 'none';
+        nav.classList.add('visible');
+        document.getElementById('hb')?.classList.add('visible');
+        document.getElementById('ht')?.classList.add('visible');
+        document.getElementById('hd')?.classList.add('visible');
+        document.getElementById('htag')?.classList.add('visible');
+      }, 480);
+    }, 2100);
+  });
+
+  // SCROLL REVEAL
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, idx) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => {
+          entry.target.classList.add('visible');
+        }, idx * 80);
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1, rootMargin: "0px 0px -20px 0px" });
+
+  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+</script>
+
+</body>
+</html>
+Done
+
